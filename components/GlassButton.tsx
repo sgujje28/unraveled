@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import {
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -66,6 +67,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    ...(Platform.OS === "web"
+      ? ({
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+        } as any)
+      : {}),
   },
   text: {
     color: "#FFFFFF",

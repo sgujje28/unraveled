@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { Platform, StyleSheet, View, ViewStyle } from "react-native";
 
 interface GlassCardProps {
   children: ReactNode;
@@ -43,5 +43,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+    ...(Platform.OS === "web"
+      ? ({
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+        } as any)
+      : {}),
   },
 });

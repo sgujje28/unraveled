@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
 import { usePathname, useRouter } from "expo-router";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSidebar } from "./SidebarContext";
@@ -35,7 +34,7 @@ export default function Sidebar() {
   // Mobile: Bottom bar
   if (isMobile) {
     return (
-      <BlurView intensity={20} tint="light" style={styles.bottomBar}>
+      <View style={styles.bottomBar}>
         {allItems.map((item) => {
           const isActive = pathname === item.route;
           return (
@@ -67,7 +66,7 @@ export default function Sidebar() {
             </Pressable>
           );
         })}
-      </BlurView>
+      </View>
     );
   }
 
@@ -104,9 +103,7 @@ export default function Sidebar() {
   };
 
   return (
-    <BlurView
-      intensity={20}
-      tint="light"
+    <View
       style={[
         styles.sidebar,
         {
@@ -119,7 +116,7 @@ export default function Sidebar() {
     >
       <View style={{ flex: 1 }}>{navItems.map(renderNavItem)}</View>
       <View style={{ paddingBottom: 20 }}>{renderNavItem(accountItem)}</View>
-    </BlurView>
+    </View>
   );
 }
 
@@ -133,6 +130,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     zIndex: 1000,
     overflow: "hidden",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRightWidth: 1,
+    borderRightColor: "rgba(255, 255, 255, 0.2)",
+    ...(Platform.OS === "web"
+      ? ({
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+        } as any)
+      : {}),
   },
   navItem: {
     flexDirection: "row",
@@ -167,6 +173,15 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingTop: 8,
     zIndex: 1000,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.2)",
+    ...(Platform.OS === "web"
+      ? ({
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+        } as any)
+      : {}),
   },
   bottomBarItem: {
     flex: 1,
