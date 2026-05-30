@@ -1,6 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { usePathname, useRouter } from "expo-router";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { FeatureFlags } from "../utils/featureFlags";
+import { useAuth } from "./AuthContext";
 import { useSidebar } from "./SidebarContext";
 
 type NavItem = {
@@ -11,19 +13,22 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { name: "Home", icon: "home-outline", route: "/" },
-  { name: "Assessment", icon: "clipboard-outline", route: "/assessment" },
+  ...(FeatureFlags.assessments
+    ? [{ name: "Assessment", icon: "clipboard-outline", route: "/assessment" } as NavItem]
+    : []),
 ];
-
-const accountItem: NavItem = {
-  name: "Account",
-  icon: "person-outline",
-  route: "/account",
-};
 
 export default function Sidebar() {
   const { isExpanded, setIsExpanded, isMobile } = useSidebar();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+
+  const accountItem: NavItem = {
+    name: isAuthenticated ? "Account" : "Log In/Sign Up",
+    icon: "person-outline",
+    route: "/account",
+  };
 
   const handlePress = (route: string) => {
     router.push(route as any);

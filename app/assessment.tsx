@@ -1,3 +1,5 @@
+import { Redirect, useRouter } from "expo-router";
+import { FeatureFlags } from "../utils/featureFlags";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import AssessmentQuiz from "../components/AssessmentQuiz";
@@ -18,12 +20,17 @@ import {
 type AssessmentStep = "category" | "perspective" | "quiz" | "results";
 
 export default function Assessment() {
+  const router = useRouter();
   const [step, setStep] = useState<AssessmentStep>("category");
   const [category, setCategory] = useState<AssessmentCategory | null>(null);
   const [perspective, setPerspective] = useState<AssessmentPerspective | null>(
     null
   );
   const [result, setResult] = useState<AssessmentResult | null>(null);
+
+  if (!FeatureFlags.assessments) {
+    return <Redirect href="/" />;
+  }
 
   const handleCategorySelect = (selectedCategory: AssessmentCategory) => {
     setCategory(selectedCategory);
@@ -133,6 +140,17 @@ export default function Assessment() {
                   </GlassButton>
                 </GlassCard>
               </View>
+
+              <GlassButton
+                onPress={() => router.push("/assessment-history")}
+                style={styles.historyButton}
+                opacity={0.15}
+                borderOpacity={0.3}
+              >
+                <Text style={styles.historyButtonText}>
+                  View Assessment History
+                </Text>
+              </GlassButton>
             </>
           )}
 
@@ -243,5 +261,14 @@ const styles = StyleSheet.create({
   backButton: {
     marginTop: 20,
     width: "100%",
+  },
+  historyButton: {
+    marginTop: 32,
+    width: "100%",
+  },
+  historyButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
 });
